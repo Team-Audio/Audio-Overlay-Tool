@@ -1,5 +1,8 @@
 <h1 align="center">Audio Overlay Tool</h1>
-
+<p align="center">
+<a href="https://lgtm.com/projects/g/Team-Audio/Audio-Overlay-Tool/alerts/"><img alt="Total alerts" src="https://img.shields.io/lgtm/alerts/g/Team-Audio/Audio-Overlay-Tool.svg?logo=lgtm&logoWidth=18"/></a>
+<a href="https://lgtm.com/projects/g/Team-Audio/Audio-Overlay-Tool/context:python"><img alt="Language grade: Python" src="https://img.shields.io/lgtm/grade/python/g/Team-Audio/Audio-Overlay-Tool.svg?logo=lgtm&logoWidth=18"/></a>
+</p>
 
 ### Manual
 ```
