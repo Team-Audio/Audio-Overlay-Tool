@@ -16,11 +16,16 @@ Options:
     --version                Show version.
 
 """
-
+import asyncio
 from docopt import docopt
 from driver import Remixer
 
-if __name__ == "__main__":
+
+async def main():
     arguments = docopt(__doc__, version="0.0.1-alpha0")
     driver = Remixer(args=arguments)
-    driver.run()
+    await driver.run()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

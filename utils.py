@@ -1,3 +1,4 @@
+import asyncio
 import os
 from typing import AnyStr, Dict
 
@@ -71,3 +72,10 @@ def build_pattern(match_dict: Dict[str, str], pattern: str) -> str:
     for key, value in match_dict.items():
         p = p.replace(key, value)
     return p
+
+
+def background(f):
+    def wrapped(*args, **kwargs):
+        return asyncio.get_event_loop().run_in_executor(None, f, *args, **kwargs)
+
+    return wrapped

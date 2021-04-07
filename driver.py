@@ -1,8 +1,11 @@
+import asyncio
 import os
 import random
 
+import utils
 from filter import Filter
 from utils import is_file_in_dir, ensure_folder, merge_audio
+import tqdm
 
 
 class Remixer:
@@ -41,19 +44,20 @@ class Remixer:
     def select_some(self, N):
         # copy the input directory collection
         # select some
-        return random.sample(self.file_collection[:], N)
+        return random.sample(self.file_collection, N)
 
     # gets all files in a directory and checks it against the filter
     def iterate_directory(self, path):
-        return [(x, path) for x in os.listdir(path)
+        return [(x, path) for x in tqdm.tqdm(os.listdir(path), desc=f"Scanning {path}")
                 if is_file_in_dir(x, path)
                 and self.filter_driver.good(x)]
 
-    def run(self):
+    async def run(self):
 
         ensure_folder(self.out_dir)
 
-        for i in range(self.to_generate):
+        @utils.background
+        def parallel():
             [x, *rest] = self.select_some(self.samples_per_sample)
 
             # based on the filter and the outfmt
@@ -63,3 +67,10 @@ class Remixer:
 
             merge_audio(os.path.join(*x[::-1]), *[os.path.join(*p[::-1]) for p in rest],
                         out=os.path.join(self.out_dir, out_name))
+
+        # Generate Jobs
+        futures = [parallel() for _ in tqdm.trange(self.to_generate, desc="Dispatching jobs")]
+
+        # Await Jobs
+        for future in tqdm.tqdm(futures, desc="Awaiting futures"):
+            await future

@@ -2,6 +2,7 @@ import re
 from typing import Union
 
 from utils import num_to_char_lut, build_pattern
+from functools import lru_cache
 
 
 class Filter:
@@ -31,6 +32,7 @@ class Filter:
             return True
         return self.filter.match(v) is not None
 
+    @lru_cache(maxsize=32)
     def _make_default_pattern(self, col):
         # in case that self.pattern is None, we need to generate a
         # default input pattern from the input data
@@ -54,7 +56,7 @@ class Filter:
 
         # check if a pattern was specified
         if self.pattern is None:
-            self._make_default_pattern(col)
+            self._make_default_pattern(tuple(col))
 
         # this dictionary will hold all sub-patterns,
         # with the key being the string to be replaced
